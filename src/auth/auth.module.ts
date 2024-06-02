@@ -7,6 +7,8 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { UserRoleGuard } from './guards/user-role/user-role.guard';
+import { GetUser } from './decorators';
 
 @Module({
   controllers: [AuthController],
@@ -26,13 +28,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         }
       })
     })
-
-    // JwtModule.register({
-    //   secret: process.env.JWT_SECRET,
-    //   signOptions: {
-    //     expiresIn: '2h'
-    //   }
-    // })
   ],
   exports: [ JwtStrategy, PassportModule, JwtModule]
 })

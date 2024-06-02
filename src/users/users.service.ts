@@ -1,19 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+export class UsersService extends PrismaClient implements OnModuleInit {
+
+  private readonly logger = new Logger('AuthService');
+
+  onModuleInit() {
+    this.$connect();
+    this.logger.log('Authservice connected to database')
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.user.findMany({ where: { isActive: true } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const user = await this.user.findUnique({ where: { id } });
+    if (!user) throw new Error('User not found');
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
