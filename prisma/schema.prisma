@@ -24,9 +24,15 @@ model User {
   name String
   last_name String
   password String
-  email String
+  email String @unique
   birthdate DateTime?
-  dni String
+  dni String @unique
   role Role @default(STUDENT)
   id_grade String?
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
 }
