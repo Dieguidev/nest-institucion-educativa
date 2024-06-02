@@ -18,7 +18,8 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      if (origin === 'https://tudominio.vercel.app' || /localhost:\d+$/.test(origin)) {
+      // Permitir solicitudes desde Vercel, localhost y orígenes nulos (Postman)
+      if (!origin || origin === 'https://mi-campus.vercel.app' || /localhost:\d+$/.test(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -26,6 +27,8 @@ async function bootstrap() {
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
+
+  // https://mi-campus.vercel.app/
 
   await app.listen(envs.port);
 
