@@ -16,6 +16,17 @@ async function bootstrap() {
     })
   );
 
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (origin === 'https://tudominio.vercel.app' || /localhost:\d+$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
+
   await app.listen(envs.port);
 
   logger.log(`API is running on port ${envs.port}`)
