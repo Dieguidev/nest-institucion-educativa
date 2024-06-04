@@ -20,19 +20,36 @@ enum Role {
 }
 
 model User {
-  id   String @id @default(uuid())
-  name String
+  id        String    @id @default(uuid())
+  name      String
   last_name String
-  password String
-  email String @unique
+  password  String
+  email     String    @unique
   birthdate DateTime?
-  dni String @unique
-  role Role @default(STUDENT)
-  id_grade String?
-  isActive Boolean @default(true)
+  dni       String    @unique
+  role      Role      @default(STUDENT)
+  gradeId   String?
+  isActive  Boolean   @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  grade_grade_tutorIdTouser Grade[] @relation("grade_tutorIdTouser")
+  grade_user_gradeIdTograde Grade?  @relation("user_gradeIdTograde", fields: [gradeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
   @@index([isActive])
+}
+
+model Grade {
+  id          String  @id @default(uuid())
+  school_year Int
+  grade       String
+  section     String
+  tutorId     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user_grade_tutorIdTouser User?  @relation("grade_tutorIdTouser", fields: [tutorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_user_gradeIdTograde User[] @relation("user_gradeIdTograde")
 }
