@@ -99,14 +99,14 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 
   async checkAuthStatus(user) {
     return {
-      ...user,
+      user: user,
       token: await this.signJWT({ id: user.id })
     }
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  // findAll() {
+  //   return `This action returns all auth`;
+  // }
 
   // findOne(id: number) {
   //   return `This action returns a #${id} auth`;

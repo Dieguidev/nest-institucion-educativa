@@ -4,22 +4,37 @@ import { CreateUserDto, LoginUserDto } from './dto';
 
 import { Auth, GetUser } from './decorators';
 import { ValidRoles } from './interfaces';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserDto } from './dto/user.dto';
 
 
 
+
+
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
+  @ApiResponse({ status: 201, description: 'User was created', type: UserDto })
+  @ApiResponse({ status: 400, description: 'BadRequest' })
+  @ApiResponse({ status: 403, description: 'Forbidden, Token' })
   @Post('register')
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
   }
+
+  @ApiResponse({ status: 201, description: 'User was login', type: UserDto })
+  @ApiResponse({ status: 400, description: 'BadRequest' })
+  @ApiResponse({ status: 403, description: 'Forbidden, Token' })
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
   }
 
+  @ApiResponse({ status: 201, description: 'User was check-status and revalidate token', type: UserDto })
+  @ApiResponse({ status: 400, description: 'BadRequest' })
+  @ApiResponse({ status: 403, description: 'Forbidden, Token' })
   @Get('check-status')
   @Auth()
   checkAuthStatus(
@@ -52,35 +67,27 @@ export class AuthController {
   //   return { user,};
   // }
 
-  @Get()
-  @Auth(ValidRoles.student)
-  findAll(
-    // @GetUser() user,
-  ) {
+  // @Get()
+  // @Auth(ValidRoles.student)
+  // findAll(
+  //   // @GetUser() user,
+  // ) {
 
-    return 'hola';
-  }
-
-  @Get(':id')
-  @Auth(ValidRoles.admin)
-  findOne(
-    @Param('id') id: string,
-    @GetUser() user,
-  ) {
-    return {
-      id,
-      user
-    }
-    // return this.authService.findOne(+id);
-  }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-  //   return this.authService.update(+id, updateAuthDto);
+  //   return 'hola';
   // }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.authService.remove(+id);
+  // @Get(':id')
+  // @Auth(ValidRoles.admin)
+  // findOne(
+  //   @Param('id') id: string,
+  //   @GetUser() user,
+  // ) {
+  //   return {
+  //     id,
+  //     user
+  //   }
+  //   // return this.authService.findOne(+id);
   // }
+
+
 }
