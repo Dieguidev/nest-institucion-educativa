@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidRoles } from 'src/auth/interfaces';
 import { Auth, GetUser } from 'src/auth/decorators';
-import { PaginationDto } from 'src/common';
+import { ApiTags } from '@nestjs/swagger';
+import { PaginationWithRoleDto } from './dto/pagination-with-role.dto';
 
+@ApiTags('User')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -13,16 +15,18 @@ export class UsersController {
   @Get()
   // @Auth(ValidRoles.student)
   findAll(
-    @Query() paginationDto: PaginationDto
+    @Query() paginationWithRoleDto: PaginationWithRoleDto
     // @GetUser() user,
   ) {
-    return this.usersService.findAll(paginationDto);
+    return this.usersService.findAll(paginationWithRoleDto);
   }
 
-  @Get(':id')
+
+
+  @Get('student/:id')
   // @Auth(ValidRoles.student)
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.usersService.findOne(id);
+  findOneStudent(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.findOneStudent(id);
   }
 
   @Patch(':id')

@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { SeedService } from './seed.service';
-import { Auth } from 'src/auth/decorators';
+
 import { ValidRoles } from 'src/auth/interfaces';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 
 @Controller('seed')
 export class SeedController {
   constructor(private readonly seedService: SeedService) {}
 
-
+  @ApiExcludeEndpoint()
   @Get()
   // @Auth(ValidRoles.admin)
   executeSeed() {
@@ -16,3 +17,4 @@ export class SeedController {
   }
 
 }
+
