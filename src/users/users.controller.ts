@@ -1,24 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidRoles } from 'src/auth/interfaces';
 import { Auth, GetUser } from 'src/auth/decorators';
+import { PaginationDto } from 'src/common';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @Auth(ValidRoles.student)
+  // @Auth(ValidRoles.student)
   findAll(
-    @GetUser() user,
+    @Query() paginationDto: PaginationDto
+    // @GetUser() user,
   ) {
-    return this.usersService.findAll();
+    return this.usersService.findAll(paginationDto);
   }
 
   @Get(':id')
-  @Auth(ValidRoles.student)
+  // @Auth(ValidRoles.student)
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne(id);
   }
@@ -29,7 +31,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.remove(id);
   }
 }
