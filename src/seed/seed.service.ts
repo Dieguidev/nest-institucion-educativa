@@ -112,22 +112,30 @@ export class SeedService extends PrismaClient implements OnModuleInit {
     const courses = await this.course.findMany()
     const grades = await this.grade.findMany()
     const teachers = await this.user.findMany({ where: { role: 'TEACHER' } })
+    const totales = teachers.length;
 
-    const randomTeacherIndex = this.randomNumber(teachers.length);
-    const randomTeacherId = teachers[randomTeacherIndex].id;
-
+    const insertPromises = [];
     courses.forEach(async course => {
       grades.forEach(async grade => {
-         const resutl =await this.gradeCourse.create({
+        insertPromises.push(this.gradeCourse.create({
           data: {
             grade_id: grade.id,
-            userId: randomTeacherId,
+            userId: teachers[this.randomNumber(totales)].id,
             courseId: course.id
           }
-        })
+        }));
+        // const resutl = await this.gradeCourse.create({
+        //   data: {
+        //     grade_id: grade.id,
+        //     userId: teachers[this.randomNumber(totales)].id,
+        //     courseId: course.id
+        //   }
+        // })
+        // console.log(resutl);
 
       })
     })
+    await Promise.all(insertPromises);
   }
 
   private async InsertGrades() {
@@ -135,8 +143,6 @@ export class SeedService extends PrismaClient implements OnModuleInit {
 
     const teachers = await this.user.findMany({ where: { role: 'TEACHER' } })
     const totales = teachers.length;
-
-
 
     const insertPromises = [];
     grades.forEach(grade => {
@@ -159,7 +165,7 @@ export class SeedService extends PrismaClient implements OnModuleInit {
       include: {
         grade_user_gradeIdTograde: {
           include: {
-            GradeCourse:true
+            GradeCourse: true
           }
 
         }

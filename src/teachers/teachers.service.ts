@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { PrismaClient } from '@prisma/client';
@@ -52,6 +52,8 @@ export class TeachersService extends PrismaClient implements OnModuleInit{
         }
       }
     });
+
+    if(!teacherData) throw new BadRequestException('Teacher not found')
 
     return {
       teacher: {
