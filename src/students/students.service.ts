@@ -1,47 +1,47 @@
 import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateStudentDto } from './dto/create-student.dto';
+import { UpdateStudentDto } from './dto/update-student.dto';
+import { PaginationDto } from 'src/common';
 import { PrismaClient } from '@prisma/client';
-import { PaginationWithRoleDto } from './dto/pagination-with-role.dto';
 
 @Injectable()
-export class UsersService extends PrismaClient implements OnModuleInit {
+export class StudentsService extends PrismaClient implements OnModuleInit{
 
   private readonly logger = new Logger('AuthService');
 
   onModuleInit() {
     this.$connect();
-    this.logger.log('Authservice connected to database')
+    this.logger.log('StudentService connected to database')
   }
 
+  async findAll(paginationDto: PaginationDto) {
+    const { limit, page } = paginationDto;
 
-  async findAll(paginationWithRoleDto: PaginationWithRoleDto) {
-    const { limit, page, role } = paginationWithRoleDto;
-
-    const [totalUsers, users] = await Promise.all([
-      this.user.count({ where: { isActive: true, role } }),
+    const [totalStudents, students] = await Promise.all([
+      this.user.count({ where: { isActive: true, role:'STUDENT' } }),
       this.user.findMany({
-        where: { isActive: true, role },
+        where: { isActive: true, role:'STUDENT' },
         skip: (page - 1) * limit,
         take: limit,
       }),
     ]);
 
-    users.forEach(user => delete user.password);
+    students.forEach(user => delete user.password);
 
-    const totalPages = Math.ceil(totalUsers / limit);
+    const totalPages = Math.ceil(totalStudents / limit);
 
     return {
-      totalUsers,
+      totalStudents,
       page,
       totalPages,
-      next: (totalUsers - (page * limit)) > 0 ? `api/users?page=${page + 1}&limit=${limit}&role=${role}` : null,
-      prev: (page - 1 > 0) ? `api/users?page=${page - 1}&limit=${limit}&role=${role}` : null,
-      users
+      next: (totalStudents - (page * limit)) > 0 ? `api/students?page=${page + 1}&limit=${limit}` : null,
+      prev: (page - 1 > 0) ? `api/students?page=${page - 1}&limit=${limit}` : null,
+      students
     }
   }
 
 
-  async findOneStudent(id: string) {
+  async findOne(id: string) {
     const user = await this.user.findUnique({
       where: { id , role: 'STUDENT'},
       include: {
@@ -68,12 +68,12 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         },
       }
     });
-    console.log(user);
+
 
     if (!user) throw new BadRequestException('User not found');
 
     const response = {
-      user:{
+      student:{
         id: user.id,
         name: user.name,
         last_name: user.last_name,
@@ -105,12 +105,12 @@ export class UsersService extends PrismaClient implements OnModuleInit {
     return response;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: number, updateStudentDto: UpdateStudentDto) {
+    return `This action updates a #${id} student`;
   }
 
   async remove(id: string) {
-    await this.findOneStudent(id);
+    await this.findOne(id);
 
     const user = await this.user.update({
       where: { id },
@@ -119,5 +119,6 @@ export class UsersService extends PrismaClient implements OnModuleInit {
 
     delete user.password;
     return { user };
+
   }
 }
