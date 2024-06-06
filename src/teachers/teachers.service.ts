@@ -47,11 +47,15 @@ export class TeachersService extends PrismaClient implements OnModuleInit{
         grade_grade_tutorIdTouser: true,
         GradeCursos: {
           include: {
-            cursoId: true
+            cursoId: true,
+            gradeId: true
           }
         }
       }
     });
+
+    console.log(teacherData.GradeCursos);
+
 
     if(!teacherData) throw new BadRequestException('Teacher not found')
 
@@ -76,8 +80,12 @@ export class TeachersService extends PrismaClient implements OnModuleInit{
         }
       )),
       courses: teacherData.GradeCursos.map(teacher => (
+
         {
           course: teacher.cursoId.name,
+          grade: teacher.gradeId.grade,
+          section: teacher.gradeId.section,
+          school_year: teacher.gradeId.school_year,
         }
       ))
     }
