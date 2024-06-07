@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 import { PrismaClient } from '@prisma/client';
@@ -69,6 +69,7 @@ export class GradesService extends PrismaClient implements OnModuleInit {
       }
     });
 
+    if(!gradeData) throw new BadRequestException('Grade not found')
 
     return {
       id: gradeData.id,
@@ -85,7 +86,7 @@ export class GradesService extends PrismaClient implements OnModuleInit {
         {
           id: course.cursoId.id,
           name: course.cursoId.name,
-
+          idTeacher: course.userId
         }
       )),
       students: gradeData.user_user_gradeIdTograde.map(student => (
