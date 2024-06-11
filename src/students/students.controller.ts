@@ -21,10 +21,10 @@ export class StudentsController {
     return this.studentsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateStudentDto: UpdateStudentDto) {
-    return this.studentsService.update(+id, updateStudentDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id', ParseUUIDPipe) id: string, @Body() updateStudentDto: UpdateStudentDto) {
+  //   return this.studentsService.update(+id, updateStudentDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {

@@ -7,9 +7,9 @@ export const GetUser = createParamDecorator(
 
     const req = ctx.switchToHttp().getRequest();
     const user = req.user;
-    console.log(user);
-    console.log(req.params.id);
-    console.log(user.id);
+    // console.log(user);
+    // console.log(req.params.id);
+    // console.log(user.id);
 
     if(!user) throw new InternalServerErrorException('User not found (request)');
 

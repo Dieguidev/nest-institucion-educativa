@@ -27,13 +27,13 @@ export class GradesController {
     return this.gradesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGradeDto: UpdateGradeDto) {
-    return this.gradesService.update(+id, updateGradeDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateGradeDto: UpdateGradeDto) {
+  //   return this.gradesService.update(+id, updateGradeDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.gradesService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.gradesService.remove(+id);
+  // }
 }

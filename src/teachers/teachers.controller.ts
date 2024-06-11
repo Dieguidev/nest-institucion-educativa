@@ -23,10 +23,10 @@ export class TeachersController {
     return this.teachersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
-    return this.teachersService.update(+id, updateTeacherDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
+  //   return this.teachersService.update(+id, updateTeacherDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {

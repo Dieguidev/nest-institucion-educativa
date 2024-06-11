@@ -5,10 +5,11 @@ import { SeedModule } from './seed/seed.module';
 import { StudentsModule } from './students/students.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { GradesModule } from './grades/grades.module';
+import { NotesModule } from './notes/notes.module';
 
 
 @Module({
-  imports: [AuthModule, UsersModule,SeedModule, StudentsModule, TeachersModule, GradesModule],
+  imports: [AuthModule, UsersModule,SeedModule, StudentsModule, TeachersModule, GradesModule, NotesModule],
 
 })
 export class AppModule {}

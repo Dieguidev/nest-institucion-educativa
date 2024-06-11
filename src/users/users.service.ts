@@ -68,7 +68,7 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         },
       }
     });
-    console.log(user);
+    // console.log(user);
 
     if (!user) throw new BadRequestException('User not found');
 
